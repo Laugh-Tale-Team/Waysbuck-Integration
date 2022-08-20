@@ -36,7 +36,7 @@ export default function Cart() {
                         {order.map((item) => (
                         <Row className="p-3">
                             <Col xs={12} md={2} style={{}}>
-                                <img src={} alt="" style={{width:"100%", borderRadius:"8px"}} />
+                                <img src='' alt="" style={{width:"100%", borderRadius:"8px"}} />
                             </Col>
                             <Col xs={12} md={6} style={{}}>
                                 <ul className="description justify-content-start align-items-center pt-4 ps-0 mb-0">

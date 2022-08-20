@@ -6,13 +6,14 @@ import NavbarAdmin from '../components/navbarAdmin';
 import ProductAdd from '../components/modal/productAdd';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from 'react-query';
+import { API } from '../config/api';
 
 
 function AddProduct() {
     const [form, setForm] = useState({
-      name: '',
+      title: '',
       price:'',
-      image:''
+      image:'',
     });
 
     const [viewLabel, setViewLabel] = useState(null);
@@ -21,7 +22,7 @@ function AddProduct() {
     // const [product, setProduct] = useState({});
     const handleChange = (e) => {
       setForm({
-          ...form,[e.target.name]: e.target.value,
+          ...form,[e.target.name]: e.target.type === "file"? e.target.files: e.target.value,
       });
 
       if (e.target.type === "file") {
@@ -35,25 +36,24 @@ function AddProduct() {
 
     const handleSubmit = useMutation(async(e) => {
         try {
-          e.prevent.default();
+          e.preventDefault();
 
           const config = {
             headers: {
-              'content-type': 'multipart/form-data',
+              'Content-type': 'multipart/form-data',
             },
           }
 
-          const formData = new formData();
-          formData.set()
+          const formData = new FormData();
           formData.set('image', form.image[0], form.image[0].name);
-          formData.set('name', form.name);
+          formData.set('title', form.title);
           formData.set('price', form.price);
           console.log(form);
 
-          const response = await API.post('/', formData, config);
+          const response = await API.post('/product', formData, config);
           console.log(response);
 
-          navigate('/');
+          navigate('/admin');
 
         } catch (error) {
           console.log(error);
@@ -61,7 +61,7 @@ function AddProduct() {
         // navigate("/admin")
     });
 
-    const handleAp =() => setAddProduct(true);
+    // const handleAp =() => setAddProduct(true);
     const handleCloseAp =() => setAddProduct(false);
     console.log(setAddProduct);
 
@@ -77,14 +77,14 @@ function AddProduct() {
               <h1 className='fw-bold'>Product</h1>
             </div>
             <Form.Group>
-              <Form.Control type='text' placeholder='Name product' onChange={handleChange} className='form-box mb-4'/>
-                <Form.Control type='text' placeholder='Price' className='form-box mb-4' onChange={handleChange} />
+              <Form.Control type='text' name='title' id='title' placeholder='Name product' onChange={handleChange} className='form-box mb-4'/>
+                <Form.Control type='number' name='price' id='price' placeholder='Price' className='form-box mb-4' onChange={handleChange} />
                   <div className='input-group  mb-4' style={{borderRadius:"5px"}}>
-                    <input type="file" className='form-control' id='inputgroupfile2' onChange={handleChange} hidden required/>
+                    <input type="file" className='form-control' name='image' id='inputgroupfile2' onChange={handleChange} hidden required/>
                   <label className='d-flex jc-between ai-center input-group-text form-box' htmlFor='inputgroupfile2' style={{width:"100%", borderRadius:"5px"}}> {labelName === ""? "Add Product": labelName} <img src={paperclip} alt="" className='' /></label>
                 </div>
               </Form.Group>
-              <Button className="btn btn-danger" style={{width:"70%"}} onClick={()=> handleAp()}>
+              <Button className="btn btn-danger" style={{width:"70%"}} type='submit'>
                 Add Product
               </Button>
               <ProductAdd addProduct={addProduct} Close={handleCloseAp}/>

@@ -25,13 +25,13 @@ export default function AuthModal() {
     setShow(false);
   };
 
+  const [state, dispatch] = useContext(UserContext)
   const [form, setForm] = useState({
-    name:'',
     email:'',
     password:'',
   })
 
-  const {name, email, password} = form
+  const {email, password} = form
 
   const handleChange = (e) => {
     setForm({
@@ -41,7 +41,6 @@ export default function AuthModal() {
   }
 
   const navigate = useNavigate()
-  const [state, dispatch] = useContext(UserContext)
 
 
   const handleSubmit = useMutation(async (e) => {
@@ -59,7 +58,9 @@ export default function AuthModal() {
       const body = JSON.stringify(form);
 
       // Insert data user to database
+      console.log(body);
       const response = await API.post('/login', body, config);
+    
       // const { status, name, email, token } = response.data.data
       if (response?.status === 200) {
         dispatch({
@@ -68,11 +69,12 @@ export default function AuthModal() {
         })
 
         if (response.data.data.status === "admin") {
-          navigate('/product-admin')
+          navigate('/admin')
         } else {
           navigate('/')
         }
       }
+      console.log(response);
 
     } catch (error) {
       const alert = (
@@ -130,13 +132,13 @@ export default function AuthModal() {
                 <Modal.Body closebutton="true">
                   <div>
                     <h1 className="mb-4 text-danger fw-bolder">Login</h1>{" "}
-                    <Form onSubmit={ (e) => handleSubmit.mutate(e)}>
+                    <Form >
                         <Form.Control
                           className="formInput border-danger mb-3"
                           type="email"
                           id="emailInput"
-                          name="email"
                           value={email}
+                          name="email"
                           onChange={handleChange}
                           placeholder="your email"
                         />
@@ -149,7 +151,7 @@ export default function AuthModal() {
                           id="passwordInput"
                           placeholder="your password"
                         />
-                      <Button variant="danger" type="submit" className="w-100" onClick={handleSubmit}>
+                      <Button variant="danger" type="submit" className="w-100" onClick={ (e) => handleSubmit.mutate(e)} >
                         Submit
                       </Button>
                     </Form>
