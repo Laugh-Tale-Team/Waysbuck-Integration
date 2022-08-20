@@ -5,16 +5,23 @@ import paperclip from '../assets/paperclip.png';
 import NavbarAdmin from '../components/navbarAdmin';
 import ProductAdd from '../components/modal/productAdd';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from 'react-query';
 
 
 function AddProduct() {
+    const [form, setForm] = useState({
+      name: '',
+      price:'',
+      image:''
+    });
+
     const [viewLabel, setViewLabel] = useState(null);
     const [labelName, setLabelName] = useState("");
     const [addProduct, setAddProduct] = useState(false);
-    const [product, setProduct] = useState({});
+    // const [product, setProduct] = useState({});
     const handleChange = (e) => {
-      setProduct({
-          ...product,[e.target.name]: e.target.value,
+      setForm({
+          ...form,[e.target.name]: e.target.value,
       });
 
       if (e.target.type === "file") {
@@ -26,10 +33,33 @@ function AddProduct() {
 
     let navigate =useNavigate();
 
-    const handleSubmit = (e) => {
-        e.prevent.default();
-        navigate("/admin")
-    }
+    const handleSubmit = useMutation(async(e) => {
+        try {
+          e.prevent.default();
+
+          const config = {
+            headers: {
+              'content-type': 'multipart/form-data',
+            },
+          }
+
+          const formData = new formData();
+          formData.set()
+          formData.set('image', form.image[0], form.image[0].name);
+          formData.set('name', form.name);
+          formData.set('price', form.price);
+          console.log(form);
+
+          const response = await API.post('/', formData, config);
+          console.log(response);
+
+          navigate('/');
+
+        } catch (error) {
+          console.log(error);
+        }
+        // navigate("/admin")
+    });
 
     const handleAp =() => setAddProduct(true);
     const handleCloseAp =() => setAddProduct(false);
@@ -42,7 +72,7 @@ function AddProduct() {
       <Container className='mt-5 pt-5'>
         <Row>
         <Col xs={12} md={7}>
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={(e) => handleSubmit.mutate(e)}>
             <div className='add-title text-danger mb-5'>
               <h1 className='fw-bold'>Product</h1>
             </div>

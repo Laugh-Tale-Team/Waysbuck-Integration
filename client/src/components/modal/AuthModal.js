@@ -1,14 +1,16 @@
 import React, { useContext, useState } from 'react'
-import { Nav, Button, Modal, Form } from 'react-bootstrap'
+import { Nav, Button, Modal, Form, Alert } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/userContext';
+import { useMutation } from 'react-query';
+import { API } from '../../config/api';
 
 export default function AuthModal() {
     
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
-
+  const [message, setMessage] = useState(null);
   const [shows, setShows] = useState(false);
   const handleShows = () => setShows(true);
   const handleCloses = () => setShows(false);
@@ -41,33 +43,74 @@ export default function AuthModal() {
   const navigate = useNavigate()
   const [state, dispatch] = useContext(UserContext)
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const email = document.getElementById('emailInput').value
-    const password = document.getElementById('passwordInput').value
+
+  const handleSubmit = useMutation(async (e) => {
+    try {
+      e.preventDefault();
+
+      // Configuration Content-type
+      const config = {
+        headers: {
+          'Content-type': 'application/json',
+        },
+      };
+
+      // Data body
+      const body = JSON.stringify(form);
+
+      // Insert data user to database
+      const response = await API.post('/login', body, config);
+      // const { status, name, email, token } = response.data.data
+      if (response?.status === 200) {
+        dispatch({
+          type: 'LOGIN_SUCCESS',
+          payload: response.data.data
+        })
+
+        if (response.data.data.status === "admin") {
+          navigate('/product-admin')
+        } else {
+          navigate('/')
+        }
+      }
+
+    } catch (error) {
+      const alert = (
+        <Alert variant="danger" className="py-1">
+          Failed
+        </Alert>
+      );
+      setMessage(alert);
+      console.log(error);
+    }
+  });
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   const email = document.getElementById('emailInput').value
+  //   const password = document.getElementById('passwordInput').value
   
 
-  let status 
-  if (email === 'admin@mail.com') {
-    status = 'admin'
-    navigate('/admin')
-  } else {
-    status = 'user'
-    navigate('/')
-  }
+  // let status 
+  // if (email === 'admin@mail.com') {
+  //   status = 'admin'
+  //   navigate('/admin')
+  // } else {
+  //   status = 'user'
+  //   navigate('/')
+  // }
 
-  const data ={
-    email,
-    password,
-    status,
-  }
+  // const data ={
+  //   email,
+  //   password,
+  //   status,
+  // }
 
-  dispatch ({
-    type: 'LOGIN_SUCCESS',
-    payload: data,
-  })
-  setShow(false)
-  }
+  // dispatch ({
+  //   type: 'LOGIN_SUCCESS',
+  //   payload: data,
+  // })
+  // setShow(false)
+  // }
 
  
   
@@ -82,13 +125,12 @@ export default function AuthModal() {
               >
                 Login
               </Button>
-
+              {message && message}
               <Modal show={show} onHide={handleClose}>
                 <Modal.Body closebutton="true">
                   <div>
                     <h1 className="mb-4 text-danger fw-bolder">Login</h1>{" "}
-                    
-                    <Form >
+                    <Form onSubmit={ (e) => handleSubmit.mutate(e)}>
                         <Form.Control
                           className="formInput border-danger mb-3"
                           type="email"
@@ -135,11 +177,11 @@ export default function AuthModal() {
               >
                 Signup
               </Button>
-
+                {message && message}
               <Modal show={shows} onHide={handleCloses}>
                 <Modal.Body>
                   <h1 className="mb-4 text-danger fw-bolder">Register</h1>{" "}
-                  <Form onSubmit={handleSubmit}>
+                  <Form onSubmit={ (e) => handleSubmit.mutate(e)}>
                     <Form.Group
                       className="mb-3"
                       controlId="exampleForm.ControlName"
