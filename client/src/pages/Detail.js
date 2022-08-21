@@ -11,46 +11,46 @@ import { useQuery } from "react-query";
 import { API } from "../config/api";
 
 function Detail() {
-  // const [total, setTotal] = useState(0)
+  const [total, setTotal] = useState(0)
 
-  // const [addCart, setAddChart] = useState(0)
-  // console.log(addCart);
+  const [addCart, setAddChart] = useState(0)
+  console.log(addCart);
 
-  // const [state, dispatch] = useContext(UserContext)
+  const [state, dispatch] = useContext(UserContext)
 
-  // const {id} = useParams()
+  const {id} = useParams()
 
-  // let {data:product} = useQuery('productCache', async()=> {
-  //     const response =await API.get('/product/' + id)
-  //     return response.data.data
-  // })
-  // let {data:toppings} = useQuery('toppingCache', async()=> {
-  //     const resp =await API.get('/toppings')
-  //     return resp.data.data
-  // })
-  // const [checkedState, setCheckedState] =useState(
-  //     new Array(toppings?.length).fill(false)
-  // )
-  // console.log(checkedState)
+  let {data:product} = useQuery('productCache', async()=> {
+      const response =await API.get('/product/' + id)
+      return response.data.data
+  })
+  let {data:toppings} = useQuery('toppingCache', async()=> {
+      const resp =await API.get('/toppings')
+      return resp.data.data
+  })
+  const [checkedState, setCheckedState] =useState(
+      new Array(toppings?.length).fill(false)
+  )
+  console.log(checkedState)
 
-  // const handleOnChange = (position) => {
-  //     const updateCheckedState = checkedState.map((item, index) =>
-  //     index === position? !item: item)
+  const handleOnChange = (position) => {
+      const updateCheckedState = checkedState.map((item, index) =>
+      index === position? !item: item)
 
-  //     setCheckedState(updateCheckedState)
+      setCheckedState(updateCheckedState)
 
-  //     const totalPrice = updateCheckedState.reduce(
-  //         (sum, currenstState, index) => {
-  //             if (currenstState === true) {
-  //                 return sum + toppings[index].price
-  //             }
-  //             return sum
-  //         },
-  //         0
-  //     )
-  //     console.log(totalPrice);
-  //     setTotal(totalPrice)
-  // }
+      const totalPrice = updateCheckedState.reduce(
+          (sum, currenstState, index) => {
+              if (currenstState === true) {
+                  return sum + toppings[index].price
+              }
+              return sum
+          },
+          0
+      )
+      console.log(totalPrice);
+      setTotal(totalPrice)
+  }
 
   return (
     <div>
