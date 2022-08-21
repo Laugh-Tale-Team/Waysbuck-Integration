@@ -56,6 +56,7 @@ func (h *handlerAuth) Register(w http.ResponseWriter, r *http.Request) {
 		Name:     request.Name,
 		Email:    request.Email,
 		Password: password,
+		Status:   "customer",
 	}
 
 	data, err := h.AuthRepository.Register(user)
@@ -117,9 +118,10 @@ func (h *handlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	loginResponse := authdto.LoginResponse{
-		Name:  user.Name,
-		Email: user.Email,
-		Token: token,
+		Name:   user.Name,
+		Email:  user.Email,
+		Status: user.Status,
+		Token:  token,
 	}
 
 	w.Header().Set("Content-Type", "application/json")

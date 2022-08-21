@@ -36,7 +36,7 @@ func main() {
 	r.PathPrefix("/uploads").Handler(http.StripPrefix("/uploads/", http.FileServer(http.Dir("./uploads"))))
 
 	fmt.Println("server running localhost:5000")
-	http.ListenAndServe("localhost:5000", r)
+	// http.ListenAndServe("localhost:5000", r)
 
 	// Setup allowed Header, Method, and Origin for CORS on this below code ...
 	var AllowedHeaders = handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})

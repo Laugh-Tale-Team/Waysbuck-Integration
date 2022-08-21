@@ -27,6 +27,7 @@ function App() {
   let navigate = useNavigate()
 
   const [state, dispatch] = useContext(UserContext)
+  console.log(state);
 
   useEffect(() => {
     if (localStorage.token) {

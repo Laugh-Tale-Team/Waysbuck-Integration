@@ -5,15 +5,23 @@ import paperclip from '../assets/paperclip.png'
 import NavbarAdmin from '../components/navbarAdmin';
 import ToppingAdd from '../components/modal/toppingAdd';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from 'react-query';
+import { API } from '../config/api';
 
 export default function AddTopping() {
+    const [form, setForm] = useState({
+        title: '',
+        price:'',
+        image:'',
+      });
+
     const [viewLabel, setViewLabel] = useState(null);
     const [labelName, setLabelName] = useState("");
     const [addTopping, setAddTopping] = useState(false);
-    const [topping, setTopping] = useState({});
+    // const [topping, setTopping] = useState({});
     const handleChange = (e) => {
-        setTopping({
-            ...topping,[e.target.name]: e.target.value,
+        setForm({
+            ...form,[e.target.name]: e.target.type === "file"? e.target.files: e.target.value,
         });
 
         if (e.target.type === "file") {
@@ -25,12 +33,34 @@ export default function AddTopping() {
 
     let navigate =useNavigate();
 
-    const handleSubmit = (e) => {
-        e.prevent.default();
-        navigate("/admin")
-    }
+    const handleSubmit = useMutation(async(e) => {
+        try {
+          e.preventDefault();
 
-    const handleAdd =() => setAddTopping(true);
+          const config = {
+            headers: {
+              'Content-type': 'multipart/form-data',
+            },
+          }
+
+          const formData = new FormData();
+          formData.set('image', form.image[0], form.image[0].name);
+          formData.set('title', form.title);
+          formData.set('price', form.price);
+          console.log(form);
+
+          const response = await API.post('/topping', formData, config);
+          console.log(response);
+
+          navigate('/admin');
+
+        } catch (error) {
+          console.log(error);
+        }
+        // navigate("/admin")
+    });
+
+    // const handleAdd =() => setAddTopping(true);
     const handleCloseAdd =() => setAddTopping(false);
     console.log(setAddTopping);
 
@@ -40,19 +70,19 @@ export default function AddTopping() {
             <NavbarAdmin />
             <Row>
                 <Col xs={12} md={7}>
-                <Form onSubmit={handleSubmit}>
+                <Form onSubmit={(e) => handleSubmit.mutate(e)}>
                     <div className='add-title text-danger mb-5'>
                         <h1 className='fw-bold'>Toping</h1>
                     </div>
                     <Form.Group>
-                    <Form.Control type='text' placeholder='Name product' className='form-box mb-4' onChange={handleChange} />
-                    <Form.Control type='text' placeholder='Price'className='form-box mb-4' onChange={handleChange} />
+                    <Form.Control type='text' name='title' placeholder='Name product' className='form-box mb-4' onChange={handleChange} />
+                    <Form.Control type='number' name='price' placeholder='Price'className='form-box mb-4' onChange={handleChange} />
                     <div className='input-group  mb-4' style={{borderRadius:"5px"}}>
-                        <input type="file" className='form-control' id='addToppingImage' name='addToppingImage' onChange={handleChange} hidden required/>
+                        <input type="file" name='image' className='form-control' id='addToppingImage' onChange={handleChange} hidden required/>
                         <label className='d-flex jc-between ai-center input-group-text form-box' htmlFor='addToppingImage' style={{width:"100%", borderRadius:"5px"}}> {labelName === ""? "Add Topping": labelName} <img src={paperclip} alt="" className='' /></label>
                     </div>
                     </Form.Group>
-                    <Button className="btn btn-auth-red" style={{width:"70%"}} onClick={()=> handleAdd()}>
+                    <Button className="btn btn-auth-red" style={{width:"70%"}} type='submit'>
                     Add Topping
                     </Button>
                     <ToppingAdd addTopping={addTopping} Close={handleCloseAdd}/>

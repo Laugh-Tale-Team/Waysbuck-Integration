@@ -86,6 +86,39 @@ export default function AuthModal() {
       console.log(error);
     }
   });
+
+  const [register, setRegister] = useState({
+    email: "",
+    password: "",
+    name: "",
+  });
+
+  const handleChangeRegister = (e) => {
+    setRegister({
+      ...register,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmitRegister = useMutation(async (e) => {
+    e.preventDefault();
+
+    // Configuration Content-type
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+
+    // Data body
+    const body = JSON.stringify(register);
+
+    // Insert data user to database
+    await API.post("/register", body, config);
+
+    // Handling response here
+    setShows(false);
+  });
   // const handleSubmit = (e) => {
   //   e.preventDefault();
   //   const email = document.getElementById('emailInput').value
@@ -183,41 +216,32 @@ export default function AuthModal() {
               <Modal show={shows} onHide={handleCloses}>
                 <Modal.Body>
                   <h1 className="mb-4 text-danger fw-bolder">Register</h1>{" "}
-                  <Form onSubmit={ (e) => handleSubmit.mutate(e)}>
-                    <Form.Group
-                      className="mb-3"
-                      controlId="exampleForm.ControlName"
-                    >
+                  <Form >
                       <Form.Control
-                        className="formInput border-danger"
+                        className="formInput border-danger mb-3"
                         type="text"
+                        name='name'
+                        onChange={handleChangeRegister}
                         placeholder="your name"
                         autoFocus
-                      />
-                    </Form.Group>
-                    <Form.Group
-                      className="mb-3"
-                      controlId="exampleForm.ControlInput1"
-                    >
+                        />
                       <Form.Control
-                        className="formInput border-danger"
+                        className="formInput border-danger mb-3"
                         type="email"
+                        name='email'
+                        onChange={handleChangeRegister}
                         placeholder="your email"
                         autoFocus
-                      />
-                    </Form.Group>
-                    <Form.Group
-                      className="mb-3"
-                      controlId="exampleForm.ControlPassword1"
-                    >
+                        />
                       <Form.Control
                         type="password"
-                        className="formInput border-danger"
+                        name='password'
+                        onChange={handleChangeRegister}
+                        className="formInput border-danger mb-3"
                         placeholder="your password"
                         autoFocus
                       />
-                    </Form.Group>
-                    <Button variant="danger" type="submit" className="w-100">
+                    <Button variant="danger" type="submit" className="w-100" onClick={(e) => handleSubmitRegister.mutate(e)}>
                       Submit
                     </Button>
                   </Form>

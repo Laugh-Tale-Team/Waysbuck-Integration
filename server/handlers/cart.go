@@ -77,14 +77,15 @@ func (h *handlerCart) CreateCart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, _ := strconv.Atoi(mux.Vars(r)["id"])
+	//id, _ := strconv.Atoi(mux.Vars(r)["id"])
 
 	requestForm := models.Cart{
-		ProductId: id,
-		TransId:   idTrans,
-		QTY:       request.QTY,
-		SubTotal:  request.SubTotal,
-		ToppingId: request.ToppingID,
+		ProductId:     request.ProductID,
+		TransactionId: idTrans,
+		QTY:           request.QTY,
+		SubTotal:      request.SubTotal,
+		ToppingId:     request.ToppingID,
+		Status:        request.Status,
 	}
 
 	validation := validator.New()
@@ -99,11 +100,12 @@ func (h *handlerCart) CreateCart(w http.ResponseWriter, r *http.Request) {
 	topping, _ := h.CartRepository.FindToppingsId(request.ToppingID)
 
 	cart := models.Cart{
-		ProductId: id,
+		ProductId: request.ProductID,
 		TransId:   idTrans,
 		QTY:       request.QTY,
 		SubTotal:  request.SubTotal,
 		Topping:   topping,
+		Status:    "on",
 	}
 
 	data, err := h.CartRepository.CreateCart(cart)

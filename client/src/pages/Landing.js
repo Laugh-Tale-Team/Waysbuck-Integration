@@ -7,12 +7,20 @@ import NavbarUser from '../components/navbar';
 import NavbarLogin from '../components/navbarUser';
 import { UserContext } from '../context/userContext';
 import convertRupiah from "rupiah-format";
+import { useQuery } from 'react-query';
+import { API } from '../config/api';
 
 
 function Landing () {
   const [state, dispatch] = useContext(UserContext)
   const [addCart, setAddChart] = useState(0)
   console.log(state.user);
+
+  let {data : products} = useQuery("productsCache", async ()=>{
+    const response = await API.get("/products")
+    return response.data.data
+  })
+  console.log(products);
 
     return (
         <div>
@@ -29,9 +37,9 @@ function Landing () {
              <b>Let's Order</b>
                 </h1>
         <Row className="gap-1">
-            {dataProduct.map((item, index) => (
+            {products?.map((item, index) => (
             <Col className="mb-3 " key={index}>
-                <Link to={state.isLogin === true ?`/product/${index}`:""} className="text-decoration-none">
+                <Link to={state.isLogin === true ?`/product/` + item.id:""} className="text-decoration-none">
                 <Card
                   key={index}
                   className="rounded-3 bgCard text-decoration-none"
@@ -40,7 +48,7 @@ function Landing () {
                   <Card.Img variant="top" src={item.image} />
                   <Card.Body className="">
                     <Card.Title className="text-danger text-decoration-none">
-                      <b>{item.name}</b>
+                      <b>{item.title}</b>
                     </Card.Title>
                     <Card.Text className="text-danger text-decoration-none">
                      {convertRupiah.convert(item.price)}
