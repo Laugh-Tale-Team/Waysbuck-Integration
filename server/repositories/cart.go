@@ -14,7 +14,7 @@ type CartRepository interface {
 	DeleteCart(Cart models.Cart) (models.Cart,error)
 	CreateTransactionId(transaction models.Transaction) (models.Transaction, error)
 	FindToppingsId(ToppingId []int) ([]models.Topping, error)
-	FindCartsTransaction(TrxId int) ([]models.Cart, error)
+	FindCartsTransaction(TrxID int) ([]models.Cart, error)
 }
 
 func RepositoryCart(db *gorm.DB) *repository {
@@ -66,9 +66,9 @@ func (r *repository) FindToppingsId(ToppingId []int) ([]models.Topping, error) {
 	return toppings, err
 }
 
-func (r *repository) FindCartsTransaction(TrxId int) ([]models.Cart, error){
+func (r *repository) FindCartsTransaction(TrxID int) ([]models.Cart, error){
 	var carts []models.Cart
-	err := r.db.Preload("Product").Preload("Topping").Debug().Find(&carts,"transaction_id = ?",TrxId).Error
+	err := r.db.Preload("Product").Preload("Topping").Debug().Find(&carts,"transaction_id = ?",TrxID).Error
 
 	return carts,err
 }

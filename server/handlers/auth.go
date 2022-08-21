@@ -65,6 +65,12 @@ func (h *handlerAuth) Register(w http.ResponseWriter, r *http.Request) {
 		response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
 		json.NewEncoder(w).Encode(response)
 	}
+	profile := models.Profile{
+		ID: data.ID,
+		UserID: data.ID,
+	}
+
+	h.AuthRepository.CreateNilProfile(profile)
 
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Code: http.StatusOK, Data: convertUsersResponse(data)}
@@ -105,8 +111,12 @@ func (h *handlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	tiemMili := time.Now()
+
 	//generate token
 	claims := jwt.MapClaims{}
+	idTrans := tiemMili.Unix()
+	claims["time"] =idTrans
 	claims["id"] = user.ID
 	claims["exp"] = time.Now().Add(time.Hour * 2).Unix() // 2 hours expired
 
@@ -123,6 +133,13 @@ func (h *handlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 		Status: user.Status,
 		Token:  token,
 	}
+
+	createOrder := models.Transaction{
+		ID: idTrans,
+		UserId: user.ID,
+	}
+
+	h.AuthRepository.CreateNilTransaction(createOrder)
 
 	w.Header().Set("Content-Type", "application/json")
 	response := dto.SuccessResult{Code: http.StatusOK, Data: loginResponse}
