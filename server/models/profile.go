@@ -11,7 +11,7 @@ type Profile struct {
 	City       	string      			`json:"city" gorm:"type: varchar(255)"`
 	PostalCode 	int        				`json:"postal_code" gorm:"type: int"`
 	UserID		int						`json:"user_id"`
-	// User		UserProfileResponse 	`json:"user" gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	User		UserProfileResponse 	`json:"user" gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	CreatedAt	time.Time				`json:"-"`
 	UpdatedAt 	time.Time 				`json:"-"`
 	

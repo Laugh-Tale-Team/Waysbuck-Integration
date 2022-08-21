@@ -34,6 +34,10 @@ func (h *handlerCart) FindCarts(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 	}
 
+	for i, p := range carts {
+		carts[i].Product.Image = path_file_cart + p.Product.Image
+	}
+
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Code: http.StatusOK, Data: carts}
 	json.NewEncoder(w).Encode(response)
@@ -81,10 +85,10 @@ func (h *handlerCart) CreateCart(w http.ResponseWriter, r *http.Request) {
 
 	requestForm := models.Cart{
 		ProductId:     request.ProductID,
-		TransactionId: idTrans,
+		TransactionID:	idTrans,
 		QTY:           request.QTY,
 		SubTotal:      request.SubTotal,
-		ToppingId:     request.ToppingID,
+		ToppingID:     request.ToppingID,
 		Status:        request.Status,
 	}
 
@@ -101,7 +105,7 @@ func (h *handlerCart) CreateCart(w http.ResponseWriter, r *http.Request) {
 
 	cart := models.Cart{
 		ProductId: request.ProductID,
-		TransId:   idTrans,
+		TransactionID:   idTrans,
 		QTY:       request.QTY,
 		SubTotal:  request.SubTotal,
 		Topping:   topping,
@@ -181,13 +185,18 @@ func (h *handlerCart) DeleteCart(w http.ResponseWriter, r *http.Request) {
 func (h *handlerCart) FindCartsById(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	id := 1
+	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
+	idTrans := int(userInfo["time"].(float64))
 
-	cart, err := h.CartRepository.FindCartsTransaction(id)
+	cart, err := h.CartRepository.FindCartsTransaction(idTrans)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
 		json.NewEncoder(w).Encode(response)
+	}
+
+	for i, p := range cart {
+		cart[i].Product.Image = path_file_cart + p.Product.Image
 	}
 
 	w.WriteHeader(http.StatusOK)

@@ -108,6 +108,14 @@ func (h *handlerTransaction) UpdateTransaction(w http.ResponseWriter, r *http.Re
 		transaction.UserId = request.UserID
 	}
 
+	if request.Total != 0 {
+		transaction.Total =request.Total
+	}
+
+	if request.Status != "" {
+		transaction.Status = request.Status
+	}
+
 	data, err := h.TransactionRepository.UpdateTransaction(transaction)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
