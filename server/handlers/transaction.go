@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"os"
 	"strconv"
 	dto "waysbuck/dto/result"
 	transactiondto "waysbuck/dto/transaction"
@@ -11,7 +12,13 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
+	"github.com/midtrans/midtrans-go/coreapi"
 )
+
+var c = coreapi.Client{
+	ServerKey: os.Getenv("SERVER_KEY"),
+	ClientKey:  os.Getenv("CLIENT_KEY"),
+  }
 
 type handlerTransaction struct {
 	TransactionRepository repositories.TransactionRepository
@@ -61,6 +68,7 @@ func (h *handlerTransaction) CreateTransaction(w http.ResponseWriter,r *http.Req
 		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
 		json.NewEncoder(w).Encode(response)
 	}
+	
 
 	validate := validator.New()
 	err := validate.Struct(request)
