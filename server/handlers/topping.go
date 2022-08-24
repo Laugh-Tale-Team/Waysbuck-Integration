@@ -74,12 +74,6 @@ func (h *handlerTopping) CreateTopping(w http.ResponseWriter, r *http.Request) {
 		Price: price,
 		Image: filename,
 	}
-	// if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-	// 	w.WriteHeader(http.StatusBadRequest)
-	// 	response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
-	// 	json.NewEncoder(w).Encode(response)
-	// 	return
-	// }
 
 	validation := validator.New()
 	err := validation.Struct(request)
@@ -124,12 +118,6 @@ func (h *handlerTopping) UpdateTopping(w http.ResponseWriter, r *http.Request) {
 		Price: price,
 		Image: filename,
 	}
-	// if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-	// 	w.WriteHeader(http.StatusBadRequest)
-	// 	response := dto.ErrorResult{Code: http.StatusBadRequest,Message: err.Error()}
-	// 	json.NewEncoder(w).Encode(response)
-	// 	return
-	// }
 	validation := validator.New()
 	err := validation.Struct(request)
 	if err != nil {

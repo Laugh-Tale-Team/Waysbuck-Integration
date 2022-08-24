@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import background from "../assets/bg.svg";
-import { dataProduct } from "../components/datadummy";
 import NavbarUser from "../components/navbar";
 import NavbarLogin from "../components/navbarUser";
 import { UserContext } from "../context/userContext";

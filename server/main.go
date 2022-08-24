@@ -26,17 +26,10 @@ func main() {
 
 	// run migration
 	database.RunMigration()
-
-	// r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-	// 	w.Header().Set("Content-Type", "application/json")
-	// 	w.WriteHeader(http.StatusOK)
-	// }).Methods("GET")
+	
 	routes.RouteInit(r.PathPrefix("/api/v1").Subrouter())
 
 	r.PathPrefix("/uploads").Handler(http.StripPrefix("/uploads/", http.FileServer(http.Dir("./uploads"))))
-
-	// fmt.Println("server running localhost:5000")
-	// http.ListenAndServe("localhost:5000", r)
 
 	// Setup allowed Header, Method, and Origin for CORS on this below code ...
 	var AllowedHeaders = handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})

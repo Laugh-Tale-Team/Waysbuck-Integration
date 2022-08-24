@@ -61,7 +61,7 @@ export default function Cart() {
     };
     const body = JSON.stringify(form);
 
-    const response = await API.patch("/transaction", body, config);
+    const response = await API.patch("/transactionID", body, config);
     console.log(response.data.data.token);
 
     const token = response.data.data.token;
@@ -86,6 +86,8 @@ export default function Cart() {
         alert("you closed the popup without finishing the payment");
       },
     });
+
+    await API.patch("/cart_id", body, config);
   });
 
   useEffect(() => {

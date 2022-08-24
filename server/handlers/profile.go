@@ -49,6 +49,5 @@ func convertResponseProfile(u models.Profile) profiledto.ProfileResponse{
 		City:		u.City,
 		Phone:	 	u.Phone,
 		UserID: 	u.UserID,
-		// User: 		u.User,
 	}
 }

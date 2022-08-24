@@ -81,8 +81,6 @@ func (h *handlerCart) CreateCart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//id, _ := strconv.Atoi(mux.Vars(r)["id"])
-
 	requestForm := models.Cart{
 		ProductId:     request.ProductID,
 		TransactionID:	idTrans,

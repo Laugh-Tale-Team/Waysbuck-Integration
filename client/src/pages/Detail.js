@@ -1,57 +1,12 @@
 import React, { useContext, useState } from "react";
-import { dataTopping } from "../components/datadummy";
-// import iceblend from '../assets/ice-blend.png';
 import { Container, Row, Col, Button } from "react-bootstrap";
 import NavbarLogin from "../components/navbarUser";
 import { useNavigate, useParams } from "react-router-dom";
-import { dataProduct } from "../components/datadummy";
-import { UserContext } from "../context/userContext";
 import convertRupiah from "rupiah-format";
 import { useMutation, useQuery } from "react-query";
 import { API } from "../config/api";
 
 function Detail() {
-  // const [total, setTotal] = useState(0)
-
-  // const [addCart, setAddChart] = useState(0)
-  // console.log(addCart);
-
-  // const [state, dispatch] = useContext(UserContext)
-
-  // const {id} = useParams()
-
-  // let {data:product} = useQuery('productCache', async()=> {
-  //     const response =await API.get('/product/' + id)
-  //     return response.data.data
-  // })
-  // let {data:toppings} = useQuery('toppingCache', async()=> {
-  //     const resp =await API.get('/toppings')
-  //     return resp.data.data
-  // })
-  // const [checkedState, setCheckedState] =useState(
-  //     new Array(toppings?.length).fill(false)
-  // )
-  // console.log(checkedState)
-
-  // const handleOnChange = (position) => {
-  //     const updateCheckedState = checkedState.map((item, index) =>
-  //     index === position? !item: item)
-
-  //     setCheckedState(updateCheckedState)
-
-  //     const totalPrice = updateCheckedState.reduce(
-  //         (sum, currenstState, index) => {
-  //             if (currenstState === true) {
-  //                 return sum + toppings[index].price
-  //             }
-  //             return sum
-  //         },
-  //         0
-  //     )
-  //     console.log(totalPrice);
-  //     setTotal(totalPrice)
-  // }
-
   const navigate = useNavigate();
 
   const [topping, setTopping] = useState([]);
@@ -109,6 +64,7 @@ function Detail() {
         qty: qty,
       });
       const response = await API.post("/cart", body, config);
+      console.log(response);
 
       navigate("/cart");
     } catch (error) {
