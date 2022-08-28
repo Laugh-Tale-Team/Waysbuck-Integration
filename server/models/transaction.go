@@ -4,14 +4,14 @@ import "time"
 
 // Product model struct
 type Transaction struct {
-	ID        int64               `json:"id"`
-	UserId    int                 `json:"user_id" gorm:"type: int"`
-	User      UserProfileResponse `json:"user"`
-	Status    string              `json:"status"`
-	Total     int                 `json:"total" gorm:"type: int"`
-	Cart      []Cart              `json:"carts"`
-	CreatedAt time.Time           `json:"-"`
-	UpdatedAt time.Time           `json:"-"`
+	ID        int64     `json:"id"`
+	UserId    int       `json:"user_id" gorm:"type: int"`
+	User      User      `json:"user"`
+	Status    string    `json:"status"`
+	Total     int       `json:"total" gorm:"type: int"`
+	Carts     []Cart    `json:"carts"`
+	CreatedAt time.Time `json:"-"`
+	UpdatedAt time.Time `json:"-"`
 }
 
 type TransactionResponse struct {

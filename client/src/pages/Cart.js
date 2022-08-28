@@ -126,7 +126,7 @@ export default function Cart() {
               <Row className="p-3">
                 {cart?.map((item, index) => (
                   <>
-                    <Col xs={12} md={2} style={{}}>
+                    <Col xs={12} md={2} className='my-1'>
                       <img
                         src={item?.product?.image}
                         alt="cartImage"
@@ -134,7 +134,7 @@ export default function Cart() {
                       />
                     </Col>
                     <Col xs={12} md={6} style={{}}>
-                      <ul className="description justify-content-start align-items-center pt-4 ps-0 mb-0">
+                      <ul className="description justify-content-start align-items-center ps-0 my-1">
                         <li>
                           <p className="text-danger fw-bold">
                             {item?.product?.title}
@@ -142,7 +142,7 @@ export default function Cart() {
                         </li>
                         <li>
                           <p className="text-danger text-start fw-semibold">
-                            Boba :
+                            Topping :
                             <span className="text-danger ">
                               {item.topping?.map((topping, idx) => (
                                 <span className="d-inline" key={idx}>
@@ -155,7 +155,7 @@ export default function Cart() {
                       </ul>
                     </Col>
                     <Col xs={12} md={4} style={{}}>
-                      <ul className="description text-end align-items-center pt-4 pr-3 ps-0 mb-0">
+                      <ul className="description text-end align-items-center pr-3 ps-0 my-1">
                         <li>
                           <p className="text-danger fw-semibold">
                             Rp {item?.subtotal}
@@ -164,9 +164,8 @@ export default function Cart() {
                         <li>
                           <i
                             className="trash-btn"
-                            onClick={() => handleDelete(item.id)}
                           >
-                            <img src={trash} alt="" style={{ width: "" }} />
+                            <img src={trash} alt="" onClick={() => handleDelete(item.id)} style={{ width: "" }} />
                           </i>
                         </li>
                         <DeleteModal listDel={listDel} Close={handleCloseDel} />

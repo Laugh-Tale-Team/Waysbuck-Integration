@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import NavbarUser from '../components/navbar'
 import profile from '../assets/photo-profile.png'
+import imgBlank from '../assets/istockphoto-587805078-612x612.jpg'
 import logo from "../assets/logo.svg";
 import barcode from '../assets/barcode.png'
 import iceblend from '../assets/ice-blend.png'
@@ -22,7 +23,7 @@ export default function Profile() {
                         <Col xs={12} md={6}>
                         <h4 className='text-start text-danger fw-bold fs-4'>My Profile</h4>
                         <img
-                        src={profile}
+                        src={profile?.image ? profile?.image : imgBlank}
                         style={{width:"100%", borderRadius:"8px"}}
                         className=''
                         alt=''
@@ -31,11 +32,11 @@ export default function Profile() {
                         <Col xs={12} md={6} className="pt-5">
                             <div>
                                 <h4 className='text-start fw-semibold fs-4' style={{color:"#613D2B"}}>Full Name</h4>
-                                <h4 className='text-start fw-normal fs-4'>Egi Ganteng</h4>
+                                <h4 className='text-start fw-normal fs-4'>{state?.user?.name}</h4>
                             </div>
                             <div>
                                 <h4 className='text-start fw-semibold fs-4' style={{color:"#613D2B"}}>Email</h4>
-                                <h4 className='text-start fw-normal fs-4'>egigans@mail.com</h4>
+                                <h4 className='text-start fw-normal fs-4'>{state?.user?.email}</h4>
                             </div>
                         </Col>
                     </Row>

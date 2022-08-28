@@ -1,14 +1,23 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {Modal, Col, Row} from 'react-bootstrap'
-import iceblend from '../../assets/ice-blend.png'
 import logo from '../../assets/logo.svg'
 import barcode from '../../assets/barcode.png'
-import { dataIncome } from '../datadummy'
+import { API } from '../../config/api'
+import rupiahFormat from 'rupiah-format'
 
 export default function TransModal({transShow, Close, id}) {
     console.log(id);
+    const [transaction, serTransaction] = useState([]);
     // const income = dataIncome[id - 1].order;
     // console.log(income)
+    useEffect(() => {
+        API.get("/transaction/" + id)
+          .then((res) => {
+            serTransaction(res.data.data);
+            // console.log(res)
+          })
+          .catch((err) => console.log("error", err));
+      });
     return (
     <Modal show={transShow} onHide={Close}
     size="lg"
@@ -23,22 +32,27 @@ export default function TransModal({transShow, Close, id}) {
                     <Row className="p-3" style={{backgroundColor:"#F6DADA", borderRadius:"5px"}}>
                         <Col xs={12} md={8}>
                             <Row className="pt-2">
-                                {/* {income.map((value)=>( */}
+                                {transaction?.carts?.map((value, index) => (
                                     <div className="d-flex mb-2">
                                     <img
-                                    src=''
+                                    src={"http://localhost:5000/uploads/" + value.product.image}
                                     style={{width:"25%", borderRadius:"8px"}}
                                     className=''
                                     alt=''
                                     />
                                     <ul className="text-start">
-                                        <li style={{listStyle:"none", fontSize:"8px"}}><h4 className='text-danger fw-bold'>test</h4></li>
+                                        <li style={{listStyle:"none", fontSize:"8px"}}><h4 className='text-danger fw-bold'>{value.title}</h4></li>
                                         <li style={{listStyle:"none", fontSize:"14px"}}><p className='text-danger fw-normal'><span className='fw-bold'>Saturday,</span> 5 march 2020</p></li>
-                                        <li style={{listStyle:"none", fontSize:"14px", marginBottom:"-10px"}}><p className='text-danger fw-semibold'> <span className="fw-bold" style={{color:"#613D2B"}}>Topping :</span></p></li>
-                                        <li style={{listStyle:"none", fontSize:"14px"}}> <p className="fw-normal" style={{color:"#613D2B"}}>Price : Rp. <span></span></p></li>
+                                        <li style={{listStyle:"none", fontSize:"14px", marginBottom:"-10px"}}><p className='text-danger fw-bold'>Topping : {""}
+                                        {value.topping.map((item, index) =>
+                                            <span key={index}>{item.title}</span>
+                                        )}
+                                            </p>
+                                        </li>
+                                        <li style={{listStyle:"none", fontSize:"14px"}}> <p className="fw-normal" style={{color:"#613D2B"}}>Price : {rupiahFormat.convert(value.subtotal)}<span></span></p></li>
                                     </ul>
                                 </div>
-                                {/* ))} */}
+                                ))}
                             </Row>
                         </Col>
                         <Col xs={12} md={4} >

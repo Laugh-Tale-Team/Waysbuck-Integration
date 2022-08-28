@@ -19,6 +19,17 @@ type UserProfileResponse struct {
 	Email string `json:"email"`
 }
 
+// type UserProfileTransResponse struct {
+// 	ID      int             `json:"id"`
+// 	Name    string          `json:"name"`
+// 	Email   string          `json:"email"`
+// 	Profile ProfileResponse `json:"profile" gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+// }
+
 func (UserProfileResponse) TableName() string {
 	return "users"
 }
+
+// func (UserProfileTransResponse) TableName() string {
+// 	return "users"
+// }

@@ -10,6 +10,7 @@ import {
 import logo from "../assets/logo.svg";
 import profile from "../assets/photo-profile.png";
 import topping from "../assets/topping.svg";
+import imgBlank from '../assets/istockphoto-587805078-612x612.jpg';
 import product1 from "../assets/addproduct.svg";
 import logoutImg from "../assets/logout.svg";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,7 +18,7 @@ import { UserContext } from "../context/userContext";
 
 export default function NavbarAdmin() {
   const profilToggle = (
-    <Image src={profile} width="50" height="50" className=" rounded-circle" />
+    <Image src={profile?.image ? profile.image : imgBlank} width="50" height="50" className=" rounded-circle" />
   );
 
   const productIcon = <Image src={product1} width="15" height="15" />;

@@ -83,17 +83,17 @@ func (h *handlerCart) CreateCart(w http.ResponseWriter, r *http.Request) {
 
 	//id, _ := strconv.Atoi(mux.Vars(r)["id"])
 
-	requestForm := models.Cart{
-		ProductId:     request.ProductID,
-		TransactionID:	idTrans,
-		QTY:           request.QTY,
-		SubTotal:      request.SubTotal,
-		ToppingID:     request.ToppingID,
-		Status:        request.Status,
-	}
+	// requestForm := models.Cart{
+	// 	ProductId:     request.ProductID,
+	// 	TransactionID:	idTrans,
+	// 	QTY:           request.QTY,
+	// 	SubTotal:      request.SubTotal,
+	// 	ToppingID:     request.ToppingID,
+	// 	Status:        request.Status,
+	// }
 
 	validation := validator.New()
-	errr := validation.Struct(requestForm)
+	errr := validation.Struct(request)
 	if errr != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
@@ -104,12 +104,12 @@ func (h *handlerCart) CreateCart(w http.ResponseWriter, r *http.Request) {
 	topping, _ := h.CartRepository.FindToppingsId(request.ToppingID)
 
 	cart := models.Cart{
-		ProductId: request.ProductID,
-		TransactionID:   idTrans,
-		QTY:       request.QTY,
-		SubTotal:  request.SubTotal,
-		Topping:   topping,
-		Status:    "on",
+		ProductId:     request.ProductID,
+		TransactionID: idTrans,
+		QTY:           request.QTY,
+		SubTotal:      request.SubTotal,
+		Topping:       topping,
+		Status:        "on",
 	}
 
 	data, err := h.CartRepository.CreateCart(cart)

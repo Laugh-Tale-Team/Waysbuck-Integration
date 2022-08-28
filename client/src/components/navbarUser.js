@@ -6,11 +6,11 @@ import {
   Nav,
   Navbar,
   NavDropdown,
-  NavLink,
 } from "react-bootstrap";
 import logo from "../assets/logo.svg";
 import profile from "../assets/photo-profile.png";
 import cart from "../assets/cart.svg";
+import imgBlank from '../assets/istockphoto-587805078-612x612.jpg';
 import profile1 from "../assets/icon-profile.svg";
 import logoutImg from "../assets/logout.svg";
 import { Link, useNavigate } from "react-router-dom";
@@ -18,7 +18,7 @@ import { UserContext } from "../context/userContext";
 
 export default function NavbarLogin({show}) {
   const profilToggle = (
-    <Image src={profile} width="50" height="50" className=" rounded-circle" />
+    <Image src={profile?.image? profile.image : imgBlank} width="50" height="50" className=" rounded-circle" />
   );
 
   const profileVector = <Image src={profile1} width="15" height="15" />;

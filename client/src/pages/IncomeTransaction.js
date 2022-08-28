@@ -1,14 +1,21 @@
 import React, {useState} from 'react'
 import { Container, Table} from 'react-bootstrap'
-// import Modal from 'react-bootstrap/Modal'
 import { dataIncome } from '../components/datadummy'
-// import NavbarUser from '../components/navbar'
 import '../assets/styles.css';
 import TransModal from '../components/modal/transModal';
 import NavbarAdmin from '../components/navbarAdmin';
 import convertRupiah from "rupiah-format";
+import { useQuery } from "react-query";
+import { API } from "../config/api";
 
 export default function IncomeTransaction() {
+
+    let { data: transactions } = useQuery("transactionsCache", async () => {
+        const response = await API.get("/transactions");
+        return response.data.data;
+      });
+      console.log(transactions)
+
     const [transShow, setTransShow] = useState(false);
     const [orderId, setOrderId] = useState(null);
     const handleTrans = (id) => {
@@ -28,6 +35,7 @@ export default function IncomeTransaction() {
                 <thead style={{backgroundColor:"#E5E5E5", border:"1px solid grey"}}>
                     <tr>
                         <th style={{border:"1px solid grey"}}>No</th>
+                        <th style={{border:"1px solid grey"}}>Transaction's ID</th>
                         <th style={{border:"1px solid grey"}}>Name</th>
                         <th style={{border:"1px solid grey"}}>Address</th>
                         <th style={{border:"1px solid grey"}}>Post Code</th>
@@ -39,28 +47,32 @@ export default function IncomeTransaction() {
                         <TransModal
                         transShow={transShow} Close={handleClose} id={orderId}
                         />
-                    {dataIncome.map((item, index) => (
+                    {transactions?.map((item, index) => (
                         <tr onClick={()=> handleTrans(item.id)} key={index}>
                             <td>
                                 {index + 1}
                             </td>
                             <td style={{border:"1px solid grey"}}>
-                                {item.name}
+                                {item?.id}
                             </td>
                             <td style={{border:"1px solid grey"}}>
-                                {item.address}
+                                {item?.user.name}
                             </td>
                             <td style={{border:"1px solid grey"}}>
-                                {item.postcode}
+                                {item?.user?.profile?.address}
                             </td>
                             <td style={{border:"1px solid grey"}}>
-                                {convertRupiah.convert(item.income)}
+                                {item?.user.profile?.postal_code}
                             </td>
-                            <td className={item.status} style={{border:"1px solid grey"}}>
-                                {item.status === "success" ? "Success" : item.status === "ontheway" ? "On The Way" : item.status === "waiting" ? "Waiting Approve" : item.status === "canceled" ? "Canceled": ""}
+                            <td style={{border:"1px solid grey"}}>
+                                {convertRupiah.convert(item?.total)}
+                            </td>
+                            <td style={{border:"1px solid grey"}}>
+                                {item?.status}
+                                {/* {item.status === "success" ? "Success" : item.status === "ontheway" ? "On The Way" : item.status === "waiting" ? "Waiting Approve" : item.status === "canceled" ? "Canceled": ""} */}
                             </td>
                         </tr>
-                    ))}
+                        ))}
                 </tbody>
             </Table>
         </Container>
